@@ -6,14 +6,14 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const app = express();
-app.use(express.json()); // Для обработки JSON-запросов
-app.use(express.static('public')); // Для отдачи HTML-файлов из папки public
+app.use(express.json());
+app.use(express.static('public'));
 
 // Middleware для проверки токена и ролей
 const authMiddleware = (roles) => (req, res, next) => {
   let token = req.headers['authorization'];
   if (!token) return res.status(401).send('Токен не предоставлен');
-  if (token.startsWith('Bearer ')) token = token.slice(7); // Убираем "Bearer "
+  if (token.startsWith('Bearer ')) token = token.slice(7);
   try {
     const decoded = jwt.verify(token, 'secretkey');
     if (roles && !roles.includes(decoded.role)) return res.status(403).send('Доступ запрещен');
@@ -24,10 +24,10 @@ const authMiddleware = (roles) => (req, res, next) => {
   }
 };
 
-// Регистрация пользователя (автоматически роль "student")
+// Регистрация пользователя
 app.post('/register', async (req, res) => {
   const { login, password } = req.body;
-  console.log('Запрос на /register:', req.body); // Отладка
+  console.log('Запрос на /register:', req.body);
   try {
     const existingUser = await User.findOne({ login });
     if (existingUser) {
@@ -45,7 +45,7 @@ app.post('/register', async (req, res) => {
 // Вход пользователя
 app.post('/login', async (req, res) => {
   const { login, password } = req.body;
-  console.log('Запрос на /login:', req.body); // Отладка
+  console.log('Запрос на /login:', req.body);
   const user = await User.findOne({ login });
   if (!user || !bcrypt.compareSync(password, user.password)) {
     return res.status(401).send('Неверный логин или пароль');
@@ -54,10 +54,10 @@ app.post('/login', async (req, res) => {
   res.json({ token });
 });
 
-// Добавление ученика (только для админа)
+// Добавление ученика
 app.post('/students', authMiddleware('admin'), async (req, res) => {
   const { name, class: studentClass } = req.body;
-  console.log('Запрос на /students:', req.body); // Отладка
+  console.log('Запрос на /students:', req.body);
   try {
     const student = new Student({
       name,
@@ -78,7 +78,7 @@ app.get('/students', authMiddleware(), async (req, res) => {
     if (req.user.role === 'admin') {
       students = await Student.find().populate('addedBy', 'login');
     } else {
-      students = await Student.find().select('-addedBy'); // Исключаем поле addedBy
+      students = await Student.find().select('-addedBy');
     }
     res.json(students);
   } catch (error) {
@@ -86,7 +86,7 @@ app.get('/students', authMiddleware(), async (req, res) => {
   }
 });
 
-// Добавление оценки (только для учителя)
+// Добавление оценки
 app.post('/grades', authMiddleware('teacher'), async (req, res) => {
   const { studentId, subject, grade } = req.body;
   try {
@@ -100,7 +100,7 @@ app.post('/grades', authMiddleware('teacher'), async (req, res) => {
   }
 });
 
-// Удаление ученика (только для админа)
+// Удаление ученика
 app.delete('/students/:id', authMiddleware('admin'), async (req, res) => {
   const { id } = req.params;
   try {
@@ -112,7 +112,7 @@ app.delete('/students/:id', authMiddleware('admin'), async (req, res) => {
   }
 });
 
-// Изменение оценки (для админа и учителя)
+// Изменение оценки
 app.put('/students/:studentId/grades/:gradeId', authMiddleware(['admin', 'teacher']), async (req, res) => {
   const { studentId, gradeId } = req.params;
   const { subject, grade } = req.body;
@@ -135,7 +135,6 @@ app.get('/', (req, res) => {
   res.sendFile('index.html', { root: 'public' });
 });
 
-// Запуск сервера
 const start = async () => {
   try {
     await connectDB();

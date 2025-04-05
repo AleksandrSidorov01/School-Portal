@@ -195,15 +195,13 @@
     #notification.show {
       opacity: 1;
     }
-    /* Стиль для списка оценок */
     .grades-list span {
-      white-space: nowrap; /* Запятая не переносится */
+      white-space: nowrap;
     }
     .grades-list {
-      display: inline; /* Для корректного переноса списка */
+      display: inline;
     }
 
-    /* Адаптивный дизайн для мобильных устройств */
     @media (max-width: 600px) {
       body {
         padding: 10px;
@@ -281,10 +279,9 @@
         right: 10px;
         max-width: 90%;
       }
-      /* Дополнительные стили для списка оценок на узких экранах */
       .grades-list {
-        display: block; /* Чтобы весь список переносился целиком */
-        line-height: 1.5; /* Для читабельности */
+        display: block;
+        line-height: 1.5;
       }
     }
   </style>
@@ -335,7 +332,6 @@
     let role = null;
     let sortDirection = 1;
 
-    // Функции для работы со спиннером
     function showSpinner(id) {
       document.getElementById(id).style.display = 'block';
     }
@@ -343,7 +339,6 @@
       document.getElementById(id).style.display = 'none';
     }
 
-    // Функция для всплывающих уведомлений
     function showNotification(message, isError = false) {
       const notification = document.getElementById('notification');
       notification.innerText = message;
@@ -351,10 +346,9 @@
       notification.classList.add('show');
       setTimeout(() => {
         notification.classList.remove('show');
-      }, 3000); // Уведомление исчезает через 3 секунды
+      }, 3000); 
     }
 
-    // Функции для работы с cookies
     function setCookie(name, value, days) {
       const expires = new Date();
       expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
@@ -370,7 +364,6 @@
       document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
     }
 
-    // Проверка cookies и автоматический вход
     window.onload = function() {
       const savedToken = getCookie('authToken');
       if (savedToken && !localStorage.getItem('cookiesAccepted')) {

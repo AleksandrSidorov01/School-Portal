@@ -5,32 +5,28 @@ const connectDB = require('./db');
 
 async function addUsers() {
   try {
-    // Подключаемся к базе
     await connectDB();
 
-    // Генерируем хеши паролей
-    const adminPassword = bcrypt.hashSync('xXxDom1xXx', 8);
-    const teacher1Password = bcrypt.hashSync('010508', 8);
-    const teacher2Password = bcrypt.hashSync('150901', 8);
+    const adminPassword = bcrypt.hashSync('пароль', 8); // пароль для админа
+    const teacher1Password = bcrypt.hashSync('пароль', 8); // пароль для учителя
+    const teacher2Password = bcrypt.hashSync('пароль', 8); // пароль для учителя
 
-    // Создаем пользователей
     const admin = new User({
-      login: 'Aleksandr',
+      login: 'логин', //Впишите ваш логин который будет использоваться для сайта (админ)
       password: adminPassword,
-      role: 'admin'
+      role: 'admin' //роль на сайте
     });
     const teacher1 = new User({
-      login: 'Anna',
+      login: 'логин', //Впишите ваш логин который будет использоваться для сайта (учитель)
       password: teacher1Password,
-      role: 'teacher'
+      role: 'teacher' //роль на сайте
     });
     const teacher2 = new User({
-      login: 'Umeda',
+      login: 'логин', //Впишите ваш логин который будет использоваться для сайта (учитель)
       password: teacher2Password,
-      role: 'teacher'
+      role: 'teacher' //роль на сайте
     });
 
-    // Сохраняем в базу
     await admin.save();
     await teacher1.save();
     await teacher2.save();
@@ -39,7 +35,6 @@ async function addUsers() {
   } catch (error) {
     console.error('Ошибка:', error.message);
   } finally {
-    // Закрываем соединение
     mongoose.connection.close();
   }
 }

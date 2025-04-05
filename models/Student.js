@@ -5,7 +5,7 @@ const StudentSchema = new mongoose.Schema({
   class: { type: String, required: true },
   grades: [{ subject: String, grade: String }],
   comments: [String],
-  addedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Кто добавил ученика
+  addedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 });
 
 module.exports = mongoose.model('Student', StudentSchema);
